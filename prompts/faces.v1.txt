@@ -1,0 +1,17 @@
+# Faces, version 1 (log entry 44): added to the system prompt, after the rules, when Video Scribe
+# found the faces in a family video's pictures on the user's computer and tagged each person. The
+# tags are a bridge: the describer keeps its own labels, and says which tag each label's person
+# has, so that a name the family gave that person (in this video or an earlier one) can be put in
+# on the computer. No name is sent. Kept apart from describe.v10.txt so that videos described
+# before faces keep their descriptions (the checkpoint goes by the prompt's text).
+
+FACES. Some pictures are followed by a line listing the faces found in them on the family's own
+computer, such as "Faces: Person 1 (left), Person 3 (middle)." Each tag stands for one person, the
+same all through this video: faces with the same tag are the same person, and faces with different
+tags are almost always different people. Use the tags to keep your labels right: give each person
+one label, by rule 13, and keep it wherever their tag appears, even in other clothes or another
+place. A new tag in view is someone new, unless the picture plainly shows otherwise. A tag is not
+a name: never write a tag in a description, as the listener never hears them. In "people", give
+each person you labelled the tag of their face in "tag" ("Person 3"), or "" when their face was
+not listed. The finder can miss a face that is turned away, small or blurred, so a person with no
+tag in one picture may still be someone tagged in another.

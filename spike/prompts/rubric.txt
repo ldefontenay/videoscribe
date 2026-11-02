@@ -1,0 +1,47 @@
+Video Scribe - how a described clip is scored (PLAN.md §3.4, spike 0(c))
+=========================================================================
+
+The bake-off (spike 0(h)) plays each described clip to the user, who listens without the picture.
+The same clips, gaps and prompt version go to every service, so the scores compare services, not luck.
+
+
+Part 1 - what the listener could tell (the user scores this, per clip)
+----------------------------------------------------------------------
+
+After listening to the clip once, with descriptions:
+
+1. Who was there? Score 0 (no idea), 1 (some of them), 2 (yes).
+2. Where was it? Score 0, 1 or 2.
+3. What happened or changed? Score 0, 1 or 2.
+4. Was any description wrong, as far as you know the video? Note which.
+5. Did any description talk over someone speaking? Note which.
+
+A clip scores out of 6 on questions 1 to 3; questions 4 and 5 are counted separately, because one wrong
+name in a family video costs more than a vague description.
+
+
+Part 2 - rule checks (Claude scores this from the text, per description)
+------------------------------------------------------------------------
+
+Each description is checked against the prompt's rules and the count of failures recorded:
+
+- narrator words: "we see", "the camera", "in this scene", "the video shows"
+- hedging: "appears", "seems", "possibly", "likely", "perhaps", "maybe"
+- sound or speech: describes a sound, quotes or paraphrases speech, says someone talks
+- over budget: more words than the gap's limit
+- wrong moment: "seen_at" missing, outside its gap, or written as mm:ss
+- name trouble: a name not in the known people (or heard and marked "heard"), taken from the file name,
+  or given to two different people
+- heard content: states as visible something only said on the soundtrack
+- repetition: says again what an earlier description said
+- not the requested language
+
+Also recorded per service: money, wall time, requests, and how many gaps it left empty.
+
+
+Part 3 - the number that decides
+--------------------------------
+
+For each corpus (YouTube, family): the average of Part 1 over its clips, then fewest wrong
+descriptions, then fewest rule failures, then cost. The default service may differ between the two
+corpora, and that is an acceptable answer.

@@ -1,0 +1,32 @@
+# Build output
+target/
+
+# Test media: family videos are personal data and never leave this computer (CLAUDE.md constraint 7)
+corpus/
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.mts
+*.m2ts
+*.3gp
+*.wav
+*.mp3
+*.m4a
+*.opus
+*.srt
+*.vtt
+*.jpg
+*.png
+
+# Downloaded tools and models fetched by the spikes
+*.exe
+*.onnx
+
+# The one model the app embeds (MIT, pinned in models/README.txt): needed to build.
+!models/silero_vad_16k_sequence.onnx
+
+# Personal working notes: each person's diary and manual tests stay on their own computer (CLAUDE.md)
+log.md
+test-milestone-*.txt

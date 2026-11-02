@@ -1,0 +1,59 @@
+[workspace]
+# spike/ is the Milestone 0 diagnostic tool, built on its own.
+exclude = ["spike"]
+
+[package]
+name = "videoscribe"
+version = "0.1.0"
+edition = "2021"
+description = "Adds spoken audio description to YouTube and family videos"
+license = "MIT"
+publish = false
+
+[dependencies]
+# Silero VAD in-process, pure Rust (PLAN.md Â§4.1); the version Photo Scribe ships.
+tract-onnx = "0.21.18"
+# The describing services' JSON, as in Photo Scribe; serde is already here through tract.
+serde_json = "1"
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Globalization",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Imaging",
+    "Win32_Media_Audio",
+    "Win32_Media_MediaFoundation",
+    "Win32_Media_Speech",
+    "Win32_Networking_WinHttp",
+    "Win32_Security",
+    "Win32_Security_Credentials",
+    "Win32_Security_Cryptography",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_JobObjects",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+    "Win32_System_Ole",
+    "Win32_System_SystemInformation",
+    "Win32_System_Threading",
+    "Win32_System_Time",
+    "Win32_System_Variant",
+    "Win32_UI_Accessibility",
+    "Win32_UI_Controls",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_Shell_Common",
+    "Win32_UI_Shell_PropertiesSystem",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+# Build-time only: runs rc.exe over videoscribe.rc. Nothing of it ships.
+[build-dependencies]
+embed-resource = "3"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

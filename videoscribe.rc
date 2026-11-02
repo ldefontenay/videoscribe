@@ -1,0 +1,377 @@
+// Video Scribe's windows, as dialog templates compiled by rc.exe.
+//
+// THREE RULES, ALL LOAD-BEARING. Tidying the layout can silently break them.
+//
+// 1. Every label comes IMMEDIATELY BEFORE the control it names, in this file.
+//    Template order is tab order, and a screen reader takes a control's name
+//    from the static text just before it. oleacc only looks backwards: a label
+//    placed after its control leaves that control unnamed.
+// 2. Every mnemonic (&x) is unique within a window. In the main window the
+//    menu bar titles answer Alt+letter too, so they count (a unit test in
+//    ui.rs checks this). Main window, in use:
+//      Menus:     f File, e Describe, o Options, h Help
+//      Controls:  v Videos, l Listen, r Review, p People, a Add a video,
+//                 n Rename, x Show in File Explorer, d Delete, u Status
+// 3. Every control reads correctly on its own. JAWS does not announce group
+//    headings, so no label may depend on one, or on any other control.
+
+#include <windows.h>
+
+1 RT_MANIFEST "videoscribe.manifest"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    0,1,0,0
+PRODUCTVERSION 0,1,0,0
+FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+FILEFLAGS      0
+FILEOS         VOS_NT_WINDOWS32
+FILETYPE       VFT_APP
+FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "Laurent Cadet de Fontenay"
+            VALUE "FileDescription",  "Adds spoken audio description to videos"
+            VALUE "FileVersion",      "0.1.0.0"
+            VALUE "InternalName",     "videoscribe"
+            VALUE "LegalCopyright",   "MIT licensed"
+            VALUE "OriginalFilename", "videoscribe.exe"
+            VALUE "ProductName",      "Video Scribe"
+            VALUE "ProductVersion",   "0.1.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#define IDD_MAIN            100
+#define IDD_MESSAGE         101
+#define IDD_ASK             102
+#define IDD_PEOPLE          103
+#define IDD_REVIEW          104
+#define IDD_LISTEN          105
+#define IDD_NAME            106
+#define IDD_ADD             108
+#define IDD_VOICE           109
+
+#define IDC_STATUS          1004
+#define IDC_LIST            1005
+#define IDC_LISTEN          1006
+#define IDC_REVIEW          1007
+#define IDC_PEOPLE          1008
+#define IDC_ADD             1009
+#define IDC_RENAME          1010
+#define IDC_SHOW            1011
+#define IDC_DELETE          1012
+#define IDC_MESSAGE         1017
+#define IDC_MESSAGE_LABEL   1018
+#define IDC_ASK_TEXT        1020
+#define IDC_P_LIST          1040
+#define IDC_P_NAME          1041
+#define IDC_P_WHO           1042
+#define IDC_P_USES          1043
+#define IDC_R_LIST          1050
+#define IDC_R_TEXT          1051
+#define IDC_R_PLAY          1052
+#define IDC_R_FILM          1053
+#define IDC_R_STOP          1054
+#define IDC_R_RESTORE       1055
+#define IDC_R_HEAR          1056
+#define IDC_R_LISTEN        1057
+#define IDC_L_WHERE         1060
+#define IDC_L_PLAY          1061
+#define IDC_L_BACK          1062
+#define IDC_L_FORWARD       1063
+#define IDC_N_NAME          1070
+#define IDC_N_LABEL         1071
+#define IDC_A_SOURCE        1090
+#define IDC_A_FILE          1091
+#define IDC_A_PLAN          1092
+#define IDC_V_LANGUAGE      1100
+#define IDC_V_VOICE         1101
+#define IDC_V_PLAY          1102
+
+#define IDR_MENU            200
+
+// Menu commands, in step with ui.rs. The submenus of choices, and the whole
+// Voice menu, are filled in as they open, from the numbers in ui.rs.
+#define IDM_OPEN            2001
+#define IDM_FOLDER          2002
+#define IDM_EXPLORER        2003
+#define IDM_EXIT            2004
+#define IDM_UPDATE_YTDLP    2005
+#define IDM_START           2010
+#define IDM_STOP            2011
+#define IDM_SEND_NAMES      2012
+#define IDM_KEEP_DOWNLOADS  2013
+#define IDM_PEOPLE          2014
+#define IDM_SHORT_TOO       2015
+#define IDM_AT_ONCE         2016
+#define IDM_REVIEW          2017
+#define IDM_LISTEN          2018
+#define IDM_KNOWING         2019
+#define IDM_PRESET_SAVE     2020
+#define IDM_PRESET_FOLDER   2021
+#define IDM_ADD             2023
+#define IDM_RENAME          2024
+#define IDM_DELETE          2025
+#define IDM_SHOW            2026
+#define IDM_FACES           2027
+#define IDM_VOICES          2028
+#define IDM_HELP            2030
+#define IDM_ABOUT           2031
+
+// The videos made so far, and what can be done to the one chosen (log entry
+// 43, after NoteFetch's list). Enter listens; F2 renames and Delete deletes,
+// from the list, which also has a context menu (Shift+F10 or the Applications
+// key). Every command is in the menus too. Delete is the last button, before
+// the Status box, so overshooting by one stop cannot reach it.
+IDD_MAIN DIALOGEX 0, 0, 400, 246
+STYLE DS_SETFONT | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Video Scribe"
+MENU IDR_MENU
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Videos, most recent first:", -1, 7, 7, 386, 8
+    LISTBOX    IDC_LIST, 7, 17, 386, 120,
+               LBS_NOTIFY | LBS_WANTKEYBOARDINPUT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_BORDER | WS_GROUP | WS_TABSTOP
+
+    DEFPUSHBUTTON "&Listen to the described sound", IDC_LISTEN, 7, 144, 190, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "&Review the descriptions", IDC_REVIEW, 203, 144, 190, 14, WS_TABSTOP
+    PUSHBUTTON "&People in this video...", IDC_PEOPLE, 7, 164, 190, 14, WS_TABSTOP
+    PUSHBUTTON "&Add a video...  Ctrl+N", IDC_ADD, 203, 164, 190, 14, WS_TABSTOP
+    PUSHBUTTON "Re&name...  F2", IDC_RENAME, 7, 184, 190, 14, WS_TABSTOP
+    PUSHBUTTON "Show in File E&xplorer", IDC_SHOW, 203, 184, 190, 14, WS_TABSTOP
+    PUSHBUTTON "&Delete...  Delete", IDC_DELETE, 7, 204, 190, 14, WS_TABSTOP
+
+    LTEXT      "Stat&us:", -1, 7, 228, 30, 8
+    EDITTEXT   IDC_STATUS, 40, 226, 353, 12, ES_AUTOHSCROLL | ES_READONLY | WS_GROUP | WS_TABSTOP
+END
+
+// Every command, with its shortcut, so that commands can be found without the
+// help. Within each menu, every item's letter is unique.
+IDR_MENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Add a video...\tCtrl+N", IDM_ADD
+        MENUITEM "Add a video &file...\tCtrl+O", IDM_OPEN
+        MENUITEM "Choose the &output folder...", IDM_FOLDER
+        MENUITEM "Show the output folder in File &Explorer", IDM_EXPLORER
+        MENUITEM "&Update yt-dlp, the web video downloader", IDM_UPDATE_YTDLP
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4", IDM_EXIT
+    END
+    // For the video chosen in the list.
+    POPUP "D&escribe"
+    BEGIN
+        MENUITEM "Describe &again\tCtrl+D", IDM_START
+        MENUITEM "Describe again &knowing these people...\tCtrl+Shift+D", IDM_KNOWING
+        MENUITEM "S&top\tEscape", IDM_STOP
+        MENUITEM "&People in this video...\tCtrl+P", IDM_PEOPLE
+        MENUITEM "&Review the descriptions...\tCtrl+R", IDM_REVIEW
+        MENUITEM "&Listen to the described sound...\tCtrl+L", IDM_LISTEN
+        MENUITEM SEPARATOR
+        MENUITEM "Re&name the video...\tF2", IDM_RENAME
+        MENUITEM "Show the video's folder in File E&xplorer", IDM_SHOW
+        MENUITEM "&Delete the video...\tDelete", IDM_DELETE
+    END
+// Every choice about the descriptions and the voice, in one menu (test
+    // round 1, 4.5). The lists are filled in as they open; their items have
+    // no mnemonics, so typing a letter moves to the first item starting with it.
+    POPUP "&Options"
+    BEGIN
+        POPUP "Model &provider"
+        BEGIN
+            MENUITEM "-", 2100
+        END
+        POPUP "&Model"
+        BEGIN
+            MENUITEM "-", 2200
+        END
+        POPUP "St&yle"
+        BEGIN
+            MENUITEM "-", 2300
+        END
+        MENUITEM "&Language and voice...\tCtrl+Shift+V", IDM_VOICES
+        POPUP "&Speed"
+        BEGIN
+            MENUITEM "-", 2800
+        END
+        POPUP "When a description does not &fit its pause"
+        BEGIN
+            MENUITEM "-", 2500
+        END
+        POPUP "O&utput"
+        BEGIN
+            MENUITEM "-", 2600
+        END
+        POPUP "Picture &quality of a described video from the web"
+        BEGIN
+            MENUITEM "-", 3000
+        END
+        MENUITEM "S&hort pauses follow the same choice when a description does not fit", IDM_SHORT_TOO
+        MENUITEM "&Describe four requests at once, faster", IDM_AT_ONCE
+        MENUITEM "Send the file &name with description requests", IDM_SEND_NAMES
+        MENUITEM "&Keep video downloads for a day", IDM_KEEP_DOWNLOADS
+        MENUITEM "Know people by their f&aces in family videos", IDM_FACES
+        // Filled as it opens: save, each preset by name, the folder.
+        POPUP "P&resets"
+        BEGIN
+            MENUITEM "-", 2900
+        END
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help\tF1", IDM_HELP
+        MENUITEM "&About Video Scribe", IDM_ABOUT
+    END
+END
+
+IDD_MESSAGE DIALOGEX 0, 0, 304, 244
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&What happened:", IDC_MESSAGE_LABEL, 7, 7, 290, 8
+    EDITTEXT   IDC_MESSAGE, 7, 19, 290, 198,
+               ES_MULTILINE | ES_READONLY | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    DEFPUSHBUTTON "OK", IDOK, 247, 223, 50, 14, WS_GROUP
+END
+
+// A question with two answers. The answers' wording, and which is the default
+// for Enter, are set at run time: the safe answer is the default, and when it
+// is "no" the buttons swap so that it comes first (message.rs).
+IDD_ASK DIALOGEX 0, 0, 304, 180
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Question:", -1, 7, 7, 290, 8
+    EDITTEXT   IDC_ASK_TEXT, 7, 19, 290, 134,
+               ES_MULTILINE | ES_READONLY | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Yes", IDOK, 7, 159, 143, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "No", IDCANCEL, 154, 159, 143, 14, WS_TABSTOP
+END
+
+// Names for the labels the descriptions used, and a note on who is in the
+// video (milestone 5, peopleui.rs). Letters: l, n, w; OK and Cancel are
+// Enter and Escape. The note box takes Enter for a new line.
+IDD_PEOPLE DIALOGEX 0, 0, 320, 290
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "People in this video - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Labels the descriptions used, each with the name said instead:", -1, 7, 7, 306, 8
+    LISTBOX    IDC_P_LIST, 7, 17, 306, 64,
+               LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_BORDER | WS_GROUP | WS_TABSTOP
+
+    LTEXT      "&Descriptions that mention the chosen label, and how that person looks:", -1, 7, 87, 306, 8
+    EDITTEXT   IDC_P_USES, 7, 97, 306, 50,
+               ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+
+    LTEXT      "&Name to say instead of the chosen label, kept on this computer (empty keeps the label):", -1, 7, 153, 306, 8
+    EDITTEXT   IDC_P_NAME, 7, 163, 306, 12, ES_AUTOHSCROLL | WS_GROUP | WS_TABSTOP
+
+    LTEXT      "&Who is in this video, sent with the pictures before describing (for example: the groom has a beard; the celebrant wears a white robe):", -1, 7, 182, 306, 16
+    EDITTEXT   IDC_P_WHO, 7, 200, 306, 62,
+               ES_MULTILINE | ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+
+    DEFPUSHBUTTON "OK", IDOK, 209, 269, 50, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Cancel", IDCANCEL, 263, 269, 50, 14, WS_TABSTOP
+END
+
+// Each place of the last described sound, to hear it and change what is
+// said there (milestone 8, review.rs). Letters: l, x, p, f, t, r; Close is
+// Escape. Enter plays, from the list or the text box.
+IDD_REVIEW DIALOGEX 0, 0, 320, 250
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Review the descriptions - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&List of places in the described sound, each with what is said there:", -1, 7, 7, 306, 8
+    LISTBOX    IDC_R_LIST, 7, 17, 306, 100,
+               LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_BORDER | WS_GROUP | WS_TABSTOP
+
+    LTEXT      "Te&xt to say at the chosen place; change it to say something else, or empty it to say nothing there:", -1, 7, 123, 306, 16
+    EDITTEXT   IDC_R_TEXT, 7, 141, 306, 40,
+               ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+
+    DEFPUSHBUTTON "&Play here in the described sound", IDC_R_PLAY, 7, 188, 150, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Play the &film's own sound here", IDC_R_FILM, 163, 188, 150, 14, WS_TABSTOP
+    PUSHBUTTON "&Hear the text in the voice", IDC_R_HEAR, 7, 208, 150, 14, WS_TABSTOP
+    PUSHBUTTON "Li&sten on from here", IDC_R_LISTEN, 163, 208, 150, 14, WS_TABSTOP
+    PUSHBUTTON "&Restore the text as described", IDC_R_RESTORE, 7, 228, 150, 14, WS_TABSTOP
+    PUSHBUTTON "S&top playing", IDC_R_STOP, 163, 228, 90, 14, WS_TABSTOP
+    PUSHBUTTON "Close", IDCANCEL, 263, 228, 50, 14, WS_TABSTOP
+END
+
+IDD_LISTEN DIALOGEX 0, 0, 260, 104
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Listen to the described sound - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "Left and Right arrows: 2 seconds back or forward. Home: the start. T: where playing is.", -1, 7, 7, 246, 16
+    DEFPUSHBUTTON "&Play or pause", IDC_L_PLAY, 7, 28, 120, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "&Back 10 seconds", IDC_L_BACK, 7, 48, 120, 14, WS_TABSTOP
+    PUSHBUTTON "&Forward 10 seconds", IDC_L_FORWARD, 133, 48, 120, 14, WS_TABSTOP
+    LTEXT      "&Where playing is:", -1, 7, 70, 70, 8
+    EDITTEXT   IDC_L_WHERE, 79, 68, 174, 12, ES_READONLY | ES_AUTOHSCROLL | WS_TABSTOP
+    PUSHBUTTON "Close", IDCANCEL, 203, 86, 50, 14, WS_TABSTOP
+END
+
+IDD_NAME DIALOGEX 0, 0, 260, 62
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Save these choices as a preset - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Name for the preset, such as French family videos:", IDC_N_LABEL, 7, 7, 246, 8
+    EDITTEXT   IDC_N_NAME, 7, 18, 246, 12, ES_AUTOHSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON "&Save", IDOK, 149, 40, 50, 14, WS_TABSTOP
+    PUSHBUTTON "Cancel", IDCANCEL, 203, 40, 50, 14, WS_TABSTOP
+END
+
+// A video to describe (addvideo.rs): a web address or a file, and what will
+// be sent. Letters: v, f, w, s; Cancel is Escape. Enter starts; Ctrl+O
+// chooses a file, as in the main window.
+IDD_ADD DIALOGEX 0, 0, 400, 196
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Add a video - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Video, a web address or a video file:", -1, 7, 7, 386, 8
+    EDITTEXT   IDC_A_SOURCE, 7, 17, 246, 12, ES_AUTOHSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Choose a video &file...  Ctrl+O", IDC_A_FILE, 259, 16, 134, 14, WS_TABSTOP
+
+    LTEXT      "&What will be sent, and where the result goes:", -1, 7, 36, 386, 8
+    EDITTEXT   IDC_A_PLAN, 7, 46, 386, 120,
+               ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+
+    DEFPUSHBUTTON "&Start describing", IDOK, 239, 174, 100, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Cancel", IDCANCEL, 343, 174, 50, 14, WS_TABSTOP
+END
+
+// The language of the descriptions and the voice that speaks them
+// (voicebox.rs). Letters: l, v, p; Enter is OK, Escape cancels.
+IDD_VOICE DIALOGEX 0, 0, 260, 232
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Language and voice - Video Scribe"
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    LTEXT      "&Language of the descriptions, found by typing its first letters:", -1, 7, 7, 246, 8
+    LISTBOX    IDC_V_LANGUAGE, 7, 17, 246, 86,
+               LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_BORDER | WS_GROUP | WS_TABSTOP
+
+    LTEXT      "&Voice, each playing a sample a moment after you reach it:", -1, 7, 109, 246, 8
+    LISTBOX    IDC_V_VOICE, 7, 119, 246, 86,
+               LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_BORDER | WS_GROUP | WS_TABSTOP
+
+    PUSHBUTTON "&Play the sample again", IDC_V_PLAY, 7, 211, 100, 14, WS_GROUP | WS_TABSTOP
+    DEFPUSHBUTTON "OK", IDOK, 149, 211, 50, 14, WS_GROUP | WS_TABSTOP
+    PUSHBUTTON "Cancel", IDCANCEL, 203, 211, 50, 14, WS_TABSTOP
+END

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Video Scribe help</title>
+<style>
+body { font-family: "Segoe UI", sans-serif; max-width: 44em; margin: 2em auto; padding: 0 1em; line-height: 1.5; }
+kbd { font-family: inherit; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Video Scribe help</h1>
+<p>Version {{VERSION}}, a test version.</p>
+
+<h2>What it does</h2>
+<p>Video Scribe adds spoken descriptions of what can be seen to a video on the web, such as YouTube, or
+a video of your own. The descriptions go into the pauses between speech, with the film turned down a little under
+them, and the result is written as a new file. Your video is never changed.</p>
+
+<h2>The main window</h2>
+<p>The main window is the list of your videos, most recently made first, each with what it holds
+and when it was last made. Every video you add gets a folder of its own in the output folder, and a
+place in the list. Tab moves from the list to the buttons, then to the Status box:</p>
+<ul>
+<li><strong>Videos</strong> (<kbd>Alt+V</kbd>): the list. <kbd>Enter</kbd> listens to the chosen
+video, <kbd>F2</kbd> renames it, <kbd>Delete</kbd> deletes it, and <kbd>Shift+F10</kbd> or the
+Applications key opens its context menu (a right click does too): Listen, Review, People in this
+video, Describe again, Describe again knowing these people, Rename, Show in File Explorer and
+Delete.</li>
+<li><strong>Listen to the described sound</strong> (<kbd>Alt+L</kbd>, <kbd>Ctrl+L</kbd>, or
+<kbd>Enter</kbd>): plays it, in the Listen window.</li>
+<li><strong>Review the descriptions</strong> (<kbd>Alt+R</kbd> or <kbd>Ctrl+R</kbd>).</li>
+<li><strong>People in this video</strong> (<kbd>Alt+P</kbd> or <kbd>Ctrl+P</kbd>).</li>
+<li><strong>Add a video</strong> (<kbd>Alt+A</kbd> or <kbd>Ctrl+N</kbd>): see below.</li>
+<li><strong>Rename</strong> (<kbd>Alt+N</kbd> or <kbd>F2</kbd>): a new name for the video's folder
+and every file in it named after it, all at once. If a file is open in another program, such as a
+media player, nothing is renamed and you are told why.</li>
+<li><strong>Show in File Explorer</strong> (<kbd>Alt+X</kbd>): opens the video's folder.</li>
+<li><strong>Delete</strong> (<kbd>Alt+D</kbd> or <kbd>Delete</kbd> in the list): asks, with
+"Keep it" the default, then moves the folder to the Recycle Bin. Its descriptions are kept, so
+describing the video again sends nothing.</li>
+<li><strong>Status</strong> (<kbd>Alt+U</kbd>): the last thing Video Scribe said.</li>
+</ul>
+<p>A video Video Scribe is working on cannot be renamed or deleted until it has finished, or you
+stop it with <kbd>Escape</kbd>.</p>
+<p>Every choice is in the menus, and each one is said out loud when you make it. Nothing is ever
+greyed out: when one choice changes another, both changes are said together.</p>
+
+<h2>Add a video (Ctrl+N)</h2>
+<p>File, Add a video (<kbd>Ctrl+N</kbd>) opens a window with three places:</p>
+<ul>
+<li><strong>Video</strong> (<kbd>Alt+V</kbd>): type or paste a web address, or choose
+<strong>Choose a video file</strong> (<kbd>Alt+F</kbd> or <kbd>Ctrl+O</kbd>). YouTube and most other video sites work,
+and so does a link straight to a video file, such as one ending in .mp4. Only public videos: Video
+Scribe never signs in to a site. A path copied with Explorer's "Copy as path" works too, quotes and
+all.</li>
+<li><strong>What will be sent, and where the result goes</strong> (<kbd>Alt+W</kbd>): a summary that
+changes as the Video box changes. Review it with the arrow keys.</li>
+<li><strong>Start describing</strong> (<kbd>Alt+S</kbd>, or <kbd>Enter</kbd>): finds the speech and
+the pauses on this computer straight away, then says exactly what describing would send and asks
+before anything is sent. <kbd>Escape</kbd> closes the window without starting.</li>
+</ul>
+<p>File, Add a video file (<kbd>Ctrl+O</kbd>) chooses the file first, then opens the same window
+with it in the Video box.</p>
+
+<h2>The Describe menu (Alt+E)</h2>
+<p>For the video chosen in the list: Describe again (<kbd>Ctrl+D</kbd>), Describe again knowing
+these people (<kbd>Ctrl+Shift+D</kbd>), Stop (<kbd>Escape</kbd>), People in this video
+(<kbd>Ctrl+P</kbd>), Review the descriptions (<kbd>Ctrl+R</kbd>), Listen to the described sound
+(<kbd>Ctrl+L</kbd>), Rename the video (<kbd>F2</kbd>), Show the video's folder in File Explorer,
+and Delete the video.</p>
+
+<h2>Listen to the described sound (Ctrl+L)</h2>
+<p>For the video chosen in the list, once it has been described: the last described sound made for
+it, played from the start as the window opens. Every move is said out loud, and the Where playing
+is box says where playing is, and whether it is playing or paused.</p>
+<ul>
+<li><strong>Play or pause</strong> (<kbd>Alt+P</kbd>, or <kbd>Space</kbd> on the button). Played to
+the end, it starts again from the beginning.</li>
+<li><strong>Back 10 seconds</strong> (<kbd>Alt+B</kbd>) and <strong>Forward 10 seconds</strong>
+(<kbd>Alt+F</kbd>).</li>
+<li><kbd>Left</kbd> and <kbd>Right</kbd> arrows go back or forward 2 seconds, and <kbd>Home</kbd>
+goes to the start, from anywhere in the window except the Where playing is box, where the arrows
+read its text.</li>
+<li>While playing, the arrows and the two buttons move without a word, to keep out of the way of
+the sound. Paused, each says the time.</li>
+<li><kbd>T</kbd> says where playing is, and whether it is playing.</li>
+<li><kbd>Escape</kbd> or Close stops playing and closes the window.</li>
+</ul>
+
+<h2>Review the descriptions (Ctrl+R)</h2>
+<p>For the video chosen in the list, once it has been described. It shows the last described sound
+made for it.</p>
+<ul>
+<li><strong>List of places</strong>: each place for a description, in order, with its time in the
+described sound and what is said there, or that it was left empty or left out.</li>
+<li><strong>Text to say at the chosen place</strong>: change it to say something else, or empty it
+to say nothing there. You can also write something for a place that was left empty. The list then
+says the place was changed by you and is not in the sound yet.</li>
+<li><strong>Play here in the described sound</strong> (<kbd>Enter</kbd>, from the list or the text
+box): plays from two seconds before the place to a second after it.</li>
+<li><strong>Play the film's own sound here</strong>: the same stretch of the original, without
+descriptions. A downloaded video is only there if Keep video downloads for a day is on.</li>
+<li><strong>Hear the text in the voice</strong>: speaks what is in the text box, in the voice and
+at the speed descriptions are spoken in, then says how long it takes and whether it fits its
+pause. Use it to try a change before making the whole sound again.</li>
+<li><strong>Listen on from here</strong> (<kbd>Alt+S</kbd>): opens Listen to the described sound,
+playing from half a second before the chosen place onwards. It plays the sound as made, so a change
+is heard there only once the sound is made again. Press <kbd>Enter</kbd> in it to come back to
+Review, on the description just spoken, ready to change it.</li>
+<li><strong>Stop playing</strong>, and <strong>Restore the text as described</strong>, which undoes
+your change to the chosen place.</li>
+</ul>
+<p>Your changes are kept when you close the window. Press <kbd>Ctrl+D</kbd> to make the described
+sound again with them: nothing is sent, and it takes about as long as speaking and mixing. Your text
+is spoken as you wrote it, so a name in it stays even if you later change the names in People in
+this video. Describing the video afresh, for example after changing the style or the model, forgets
+your changes along with the old descriptions.</p>
+
+<h2>People in this video (Ctrl+P)</h2>
+<p>For the video chosen in the list. Use it before describing, after, or both. To use it before describing, add the video and answer "Not now" when asked whether to describe: the video is then in the list, and Describe again (<kbd>Ctrl+D</kbd>) describes it once your note is written.</p>
+<ul>
+<li><strong>Who is in this video</strong>: before describing, say in your own words who is who and
+how to tell them apart, for example "the groom has a beard; the celebrant wears a white robe".
+This note is sent with the pictures, and the question before sending says so. Changing it means
+the video is described again.</li>
+<li><strong>Labels</strong>: after describing, the list shows each label the descriptions used,
+such as "the woman filming". Choose one and type a name in the Name box: the name is said instead
+of the label. Names stay on this computer: they are put in just before speaking, so changing them
+and starting again sends nothing and takes a minute or two. A label that is a name the model heard
+spoken in the soundtrack says so. Everyone the descriptions single out gets a label, even someone
+seen once, such as "a grey-haired woman". A label from an earlier describing that no description
+uses now starts with "Old label", and is at the end of the list: a name for it is not said, but is
+kept.</li>
+<li><strong>Descriptions that mention the chosen label</strong>: how that person looks, then every
+description that mentions them, with its place number, so you can tell who "a bald man" is before
+naming him.</li>
+</ul>
+<p><strong>Describe again knowing these people</strong> (<kbd>Ctrl+Shift+D</kbd>, in the
+Describe menu): once you have named people, the video is described afresh, and this time the
+names you gave go with the pictures, each with the label it replaced and how that person looked.
+The model is asked to call them by those labels and to say when one of them is seen at a moment
+that matters, such as walking the bride up the aisle. You are asked first, as always, and the
+question says the names will be sent. Changes you made in Review are not kept, as the descriptions
+are new. Describe again afterwards keeps these descriptions until you choose this again.</p>
+<p>Names are kept in <code>%LOCALAPPDATA%\Video Scribe\people</code>, one text file for each
+video, which can be read and corrected in Notepad while Video Scribe is closed.</p>
+
+<h2>Knowing people by their faces</h2>
+<p>In a family video (a video file, not one from the web), Video Scribe finds the faces in the
+pictures it is about to send, on this computer, and sorts them by who they look like. Each person
+gets a tag, such as "Person 3", the same all through the video, and the tag goes beside each
+picture: "Faces: Person 1 (left), Person 3 (middle)." The model keeps its own labels ("the
+grey-haired woman") and says which tag each label's person has. No name, and nothing measured from a
+face, is ever sent: only the tags.</p>
+<p>When you give a label a name in People in this video, and that person's face was tagged,
+Video Scribe keeps their face under the name. In every later video, a face that is clearly theirs
+gets the name, put in on this computer in place of the label, and the report says so: "Known by
+their faces, and named on this computer: Ruth (the grey-haired woman)". If it is wrong, correct the
+name in People in this video; the face is then kept under the new name. Emptying a name forgets
+that face.</p>
+<p>The people named in Photo Scribe, if it is on this computer, are known too: Video Scribe reads
+Photo Scribe's list of people and their faces, and never changes them. Only the faces you named
+there count, not the ones Photo Scribe guessed.</p>
+<p>Video Scribe's own list is in <code>%APPDATA%\Video Scribe</code>: <code>people.txt</code>, each
+person's name, in Photo Scribe's format, which can be corrected in Notepad while Video Scribe is
+closed, and <code>faces.bin</code>, the measurements of the faces you named. Neither file is ever
+sent anywhere. The faces found in each video are kept in
+<code>%LOCALAPPDATA%\Video Scribe\faces</code>, so describing it again finds them at once.</p>
+<p>Finding the faces needs two small models, 39 MB, from the OpenCV project. Video Scribe uses
+Photo Scribe's copies when it has them; otherwise it asks before downloading them, once. It takes
+about half a second a picture. A video described before faces existed keeps its descriptions:
+faces are tagged only when it is described afresh, for example after a change of model or style.
+Options, "Know people by their faces in family videos", turns all this off.</p>
+
+<h2>The Options menu (Alt+O)</h2>
+<p>Every choice about the descriptions and the voice. In a list of choices, typing a letter moves
+to the first one starting with it.</p>
+<ul>
+<li><strong>Model provider</strong>: OpenRouter, paid per use with a key, or Claude Code, which uses
+a Claude subscription. Claude Code must be installed on this computer and signed in with your Claude
+account: Video Scribe refuses to use it when it is signed in with an API key, so nothing is ever
+billed beyond your plan. Describing uses some of your plan's allowance; if the limit is reached,
+describing stops and carries on from there next time. Claude is sent still pictures, never clips,
+and the pictures go to Anthropic under the privacy settings of your own Claude account.</li>
+<li><strong>Model</strong>: which model of that service. For OpenRouter, GLM 5.3 Flash is the
+default: in the listening tests it was the best overall and by far the fastest. It is sent still
+pictures. Gemini 3.5 Flash-Lite is sent short clips with their sound instead, one per pause. For Claude
+Code, Sonnet is the default and the one tested; Opus is slower and uses more of the plan, Haiku
+is faster.</li>
+<li><strong>Style</strong>: short, standard or detailed.</li>
+<li><strong>Language and voice</strong>, Ctrl+Shift+V: a window with two lists. The first is
+every language Edge's voices speak, over a hundred; type the first letters of a language, such as
+"af" for Afrikaans, to reach it. The second is that language's voices, by country, and each plays
+a short sample, at your speed, a moment after you reach it; "Play the sample again" plays it once
+more. OK keeps both; Cancel or Escape keeps what you had. The descriptions are written in the
+language, with the spelling of the voice's country, and names you give people are put in with the
+right words around them in English, French and Afrikaans. Sonia, British English, is the default.
+For a web video, captions in the description language are used when there are any, else the
+film's own automatic captions, whatever its language. If Edge's voices cannot be reached, a
+Windows voice that speaks the language is used instead; when there is none, nothing is spoken,
+you are told, and what was described is kept for next time.</li>
+<li><strong>Speed</strong>: from normal to 30% faster. 15% faster is the default. A description too
+long for its pause is spoken a little faster again, up to 15% more.</li>
+<li><strong>When a description does not fit its pause</strong>: speak it over the film, which is the
+default, pause the film while it is spoken, or leave it out.</li>
+<li><strong>Describe four requests at once, faster</strong>: on by default. Each request is about
+four places. On, four go at once: the first goes alone, and each later one is told only the labels
+for people found so far, then one short text-only request makes sure each person has one label.
+Off, they go one at a time, each told what the earlier ones said, which is about twice as slow. The
+cost is the same either way.</li>
+<li><strong>Short pauses follow the same choice when a description does not fit</strong>: on by
+default. Pauses under 1.5 seconds are described only when something important happens. On, such a
+description is treated like any other; off, it is left out when it does not fit.</li>
+<li><strong>Output</strong>: described audio (MP3) or described video (MP4). The described video
+is the film's own pictures, copied unchanged, with the described sound, ready to share; the MP3
+and its list are saved beside it. For a web video, the pictures are the ones downloaded for
+describing, at most 480 lines high, unless you choose sharper ones below. Pausing the film and video
+output cannot go together, because a paused soundtrack would no longer match the picture.
+Choosing one changes the other, and says so.</li>
+<li><strong>Picture quality of a described video from the web</strong>: small, 480 lines, the
+default and the quickest; medium, 720 lines; or sharp, 1080 lines. Sharper pictures are downloaded
+only when the output is described video, and make a bigger download: a 10-minute video at 1080
+lines can be 150 to 300 MB.</li>
+<li><strong>Keep video downloads for a day</strong>: off, a download is deleted once the described
+sound is made; on, describing the same video again starts at once.</li>
+<li><strong>Know people by their faces in family videos</strong>: on unless you turn it off. See
+"Knowing people by their faces".</li>
+<li><strong>Send the file name with description requests</strong> (the video's title, for
+a web video): off unless you turn it on. File names often
+say the most about a family video.</li>
+<li><strong>Presets</strong>: a name for a set of these choices, such as "French family videos",
+so that one choice sets them all. "Save these choices as a preset" saves the model, style,
+language, voice, speed, what happens when a description does not fit, the output, the picture quality
+and describing four at once, as they are now; never the output folder or sending the file name. Choosing a preset sets them again and says which it changed; the one in use is ticked. A
+preset is a starting point: change a choice afterwards and you are told it is no longer that
+preset, and the preset itself is not changed. Each preset is a small text file in
+<code>%APPDATA%\Video Scribe\Presets</code>, which "Show the presets folder in File Explorer" opens:
+rename or delete one there, or take a line out to have the preset leave that choice alone.</li>
+</ul>
+
+<h2>The speech map and the pause check file</h2>
+<p>Describing first finds the speech and the pauses, on this computer, and saves a speech map: one line
+for each stretch of speech and each place for a description, in order. It is saved in the video's
+folder, with a pause check sound file beside it: the video's own sound with a short high beep where
+each pause starts and a low beep where it ends. Listen to it to check that no beep pair surrounds
+speech.</p>
+
+<h2>What is sent, and what is not</h2>
+<p>Video Scribe finds the speech in the soundtrack on this computer. For each pause long enough
+for a description, it sends two or three still pictures to the model you chose, and, for a web video,
+the captions around that pause, when the site has them. With Gemini, it sends a short clip of each pause instead, picture
+and sound: only the sound inside the pause, never the speech around it. The file name, folder and
+web video's title are not sent unless you ask. The names you gave people are sent only when you choose
+Describe again knowing these people. With OpenRouter, only providers that do not keep or
+train on what they are sent are used.</p>
+
+<h2>Starting, and what happens</h2>
+<p>Describing first finds the speech and the pauses, on this computer, and saves a speech map and a
+pause check file. Nothing has been sent at that point. Video Scribe then says exactly what describing
+would send, to which model, and what it should cost, and asks. "Not now" is the default. If you
+choose Describe, the descriptions are written, spoken and mixed into the film's sound. The result is
+saved in the video's folder as "name - described.mp3", with "name - described.txt" beside it: a
+summary, then every description at its time in the described sound, and any left out and why. A
+second result gets a number, so the first is kept.</p>
+<p>The described sound, and the described video, carry tags that File Explorer and media players
+show: the title (the video's name with ", described"), "Video Scribe" as the album and album
+artist, "Audio description" as the genre, the year, a comment saying what made it (the web address,
+or for a family video only the file's name), and, as lyrics, every place and what is said there.</p>
+<p>Each video has its own folder in the output folder, named after the video's title, cleaned up
+so Windows accepts it: "Sprite Fright", or for a file, the file's own name. Every file made for
+the video goes in it, starting with the same name. A second video with the same title gets a
+folder with a number. Video Scribe finds a video's folder by the small file "Video Scribe.json"
+inside it, not by its name, so you may rename the folder in File Explorer; keep that file in it.
+Results made before Video Scribe kept folders stay where they were.</p>
+<p> Describing the same video again with only the
+voice, speed, names, output or "does not fit" choice changed sends nothing. With nothing changed at all,
+nothing is made again, and you are told so.</p>
+<p>Escape stops describing once the request being answered comes back. What was already described
+is kept: Describe again (<kbd>Ctrl+D</kbd>) on the same video, with the same choices, carries on from there.</p>
+<p>File, "Update yt-dlp, the web video downloader" brings yt-dlp up to date. Video Scribe also does
+this by itself when its copy is more than two weeks old. Try it first when a download
+fails.</p>
+
+<h2>Settings</h2>
+<p>Choices are remembered in <code>%APPDATA%\Video Scribe\settings.txt</code>, which can be read
+and corrected in Notepad while Video Scribe is closed.</p>
+</body>
+</html>
