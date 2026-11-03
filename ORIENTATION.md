@@ -21,10 +21,11 @@ installer yet and things still change from week to week.
 8. Claude Code as the describer
 9. Could Codex describe instead? Yes, probably
 10. How we work together
-11. Good first things to work on
-12. A map of the code
-13. Words you will meet
-14. Handy things to say to your AI
+11. Experimenting with prompts and models
+12. Ideas, if any appeal
+13. A map of the code
+14. Words you will meet
+15. Handy things to say to your AI
 
 ---
 
@@ -117,11 +118,23 @@ a Rust Windows app with the MSVC toolchain and the Windows SDK"*, and let it wal
 
 ### Get the code and build it
 
+You work on your own copy of the project on GitHub, called a **fork**: you can change anything in it
+freely, and offer changes back when you like (section 10).
+
+1. Make a GitHub account if you don't have one.
+2. Open https://github.com/ldefontenay/videoscribe and press **Fork** (top right), then **Create fork**.
+   You now have `github.com/<your-name>/videoscribe`.
+3. On your computer:
+
 ```
-git clone https://github.com/ldefontenay/videoscribe.git
+git clone https://github.com/<your-name>/videoscribe.git
 cd videoscribe
+git remote add upstream https://github.com/ldefontenay/videoscribe.git
 cargo build --release
 ```
+
+(`upstream` is Laurent's copy, so you can pull in his latest work: ask your AI to "update my fork from
+upstream".)
 
 The first build takes a few minutes (it compiles the speech-detection engine). The program is then
 `target\release\videoscribe.exe`. Run it. F1 opens the full help.
@@ -231,7 +244,7 @@ the "what will be sent" question must say.
   it does for Claude).
 
 It also needs a small change to the project's rules (`CLAUDE.md`, rule 6: only `yt-dlp` and `claude` may
-be started), so open an issue first. It would make a very good first project (section 11).
+be started), so open an issue first, if it appeals.
 
 ## 10. How we work together
 
@@ -256,12 +269,13 @@ be started), so open an issue first. It would make a very good first project (se
 
 1. **Talk first.** For anything bigger than a small fix, open a GitHub **issue** saying what you'd like
    to do and why. A quick yes saves a wasted afternoon.
-2. **Work on a branch**, never directly on `main`: `git checkout -b codex-provider`. (Or tell your AI
-   "make a branch for this".)
+2. **Work on a branch in your fork**, not directly on `main`: `git checkout -b music-lessons`. (Or
+   tell your AI "make a branch for this".) Experiments that go nowhere can simply stay on their branch.
 3. **Commit small, and often**, with messages that say what changed for the user.
 4. **Before you share**, have your AI run the three checks: `cargo fmt`, `cargo clippy -- -D warnings`
    and `cargo test`. All must pass.
-5. **Open a pull request** into `main`. Include a **"How to test"** section in plain steps ("Press
+5. **Push the branch to your fork and open a pull request** into Laurent's `main` (GitHub offers a
+   "Compare & pull request" button after you push). Include a **"How to test"** section in plain steps ("Press
    Ctrl+N, paste this address, press Enter: you should hear..."). Laurent's AI turns that into a test
    script he can follow with JAWS. Say plainly what you did **not** test.
 6. Laurent tests and merges, or says what's off.
@@ -281,25 +295,76 @@ Describing on OpenRouter costs real (small) money. Before letting your AI run re
 ask it what they'll cost. Short public videos are cheap; a feature film is still only cents with GLM,
 but it adds up over many runs.
 
-## 11. Good first things to work on
+## 11. Experimenting with prompts and models
 
-Roughly from easiest to hardest. Each is a fine issue to open:
+This is where most of the quality comes from, and you need no Rust for it.
 
-- **A friendlier message when a job finishes.** It's on the release checklist (`PLAN.md` §10).
-  It needs a light touch and a good ear: try it with NVDA.
-- **German speaks more slowly.** Edge's voices fit about 3 words a second in English and French but
-  only 2.7 in German, so German descriptions are often too long for their pauses. The rule needs a
-  per-language number (`PLAN.md` milestone 11).
-- **The cost estimate is too low for French.** French uses more tokens than English for the same
-  description. The estimate should allow for the language.
-- **Codex as a third describer** (section 9). Self-contained, high value, and a nice way to learn the
-  code.
-- **Your own idea.** You'll see the app with fresh eyes. Anything confusing to you is worth an issue.
+### The prompt
 
-Categories (milestone 12) is Laurent's next piece; check with him before starting anything that touches
-the main window, so you don't both change it at once.
+The instructions sent to the AI with every request are in `prompts/describe.v10.txt`: about 400 lines
+of plain English, with comments (lines starting `#`) saying why each rule is there. They grew from
+the published guidance for professional audio description and from Laurent's listening tests. Words in
+curly brackets, such as `{style}` or `{known_people}`, are filled in by the app.
 
-## 12. A map of the code
+To try a change:
+
+1. Copy it to `prompts/describe.v11.txt` and edit the copy. Keep the old one: results made with it can
+   still be explained.
+2. Point the app at it: line 23 of `src/describe.rs` names the file. Rebuild (`cargo build --release`).
+3. **Make sure the video is described afresh.** Video Scribe saves every description it has paid for, and
+   deliberately reuses them when only the prompt changed. To describe a video again from scratch, delete
+   its file in `%LOCALAPPDATA%\Video Scribe\checkpoints` (the one named after the video), or change the
+   model or style. Otherwise you will hear the old descriptions and think your change did nothing.
+4. Compare by ear in Listen (Ctrl+L), and line by line in Review (Ctrl+R). The text file saved beside
+   each result, "name - described.txt", lists every description with its time, which is handy for
+   comparing two versions side by side or with your AI.
+
+### The model
+
+The Options menu offers three OpenRouter models, but **any OpenRouter model that accepts pictures** can be
+tried. Close Video Scribe, open `%APPDATA%\Video Scribe\settings.txt` in Notepad, and change the line
+`openrouter model = z-ai/glm-5.3-flash` to another model's id from openrouter.ai/models; copy the exact id
+from the model's page, and check its price and that it takes pictures. The cost estimate
+is only known for the three listed models; for others, OpenRouter's Activity page shows what each run
+cost. Laurent's findings so far (`PLAN.md` §7, decisions 19, 23 and 28): GLM was best overall and fastest,
+Claude best at keeping track of people, Gemini the only one that hears the sound.
+
+### Music lessons: an interesting case
+
+Laurent mentioned you're interested in descriptions of music lessons. That would be a genuinely new use,
+and it would test the app in ways nobody has yet:
+
+- **The pauses are different.** Video Scribe finds pauses in *speech*. In a lesson, the gaps are often
+  where the teacher *plays*, and that's the part a learner most needs to hear, not talk over. The option
+  **"When a description does not fit: pause the film"** may suit lessons better than speaking over.
+- **What matters on screen is different.** Hand position, fingering, which string or key, the bow, a
+  diagram or sheet music, the chord shape. A film describer is told to describe people and action;
+  a lesson might want a prompt of its own, or a "lesson" style alongside short, standard and detailed.
+- **Captions help.** Many lesson videos have the teacher's words captioned, which the app uses for timing
+  and passes to the AI, so it knows what the teacher is talking about.
+- **Models may differ a lot here.** Reading a fretboard or a keyboard from a still picture is hard.
+  Gemini, which watches short clips, might do better than models that only see stills. Nobody knows yet.
+
+A few lessons, described with two or three models and a prompt tuned for them, and a note of what was
+good and bad, would be valuable on its own, even with no code changed.
+
+## 12. Ideas, if any appeal
+
+No obligation and no order: just things that are open, in case one catches your interest.
+
+- Music lessons (above): a prompt or a style for them, and findings on which model reads hands and
+  instruments best.
+- Codex as a third describer (section 9).
+- A friendlier message when a job finishes (on the release checklist, `PLAN.md` §10).
+- German speaks more slowly than English or French, so its descriptions need fewer words a second; and
+  the cost estimate is a little low for French.
+- Anything that confused you. You'll see the app with fresh eyes, and an issue saying "this puzzled me"
+  is useful.
+
+Laurent's next piece is categories (folders in the list of videos), so check with him before changing the
+main window, so you don't both change it at once.
+
+## 13. A map of the code
 
 All of it is in `src/`, about 19,000 lines of Rust, most of it plain and well commented:
 
@@ -313,7 +378,7 @@ All of it is in `src/`, about 19,000 lines of Rust, most of it plain and well co
 - `config.rs`, `choices.rs`, `presets.rs`: settings and the Options menu.
 - `spike/`: the early experiments that proved each piece would work. Separate, and safe to ignore.
 
-## 13. Words you will meet
+## 14. Words you will meet
 
 - **Audio description (AD)**: spoken narration of what's on screen, in the pauses.
 - **Place**: one pause long enough for a description.
@@ -334,7 +399,7 @@ All of it is in `src/`, about 19,000 lines of Rust, most of it plain and well co
 - **Spike**: a small experiment to check that something will work before building it.
 - **`[proven]`, `[untested]`**: markers in `PLAN.md` saying whether a claim has actually been checked.
 
-## 14. Handy things to say to your AI
+## 15. Handy things to say to your AI
 
 - *"Read CLAUDE.md, ORIENTATION.md and PLAN.md section 7, then tell me in plain words how describing a
   video works."*
@@ -344,6 +409,9 @@ All of it is in `src/`, about 19,000 lines of Rust, most of it plain and well co
 - *"Make a branch, make the change, run fmt, clippy and the tests, and write me a pull request
   description with a 'How to test' section for a screen reader user."*
 - *"What would this test run cost on OpenRouter?"*
+- *"Copy the describe prompt to a new version, and change it so that, for a music lesson, it describes
+  the hands and the instrument. Then build the app with it."*
+- *"Compare these two described.txt files and tell me which descriptions changed and how."*
 - *"Check this change against the accessibility rules in CLAUDE.md: labels, announcements, nothing
   greyed out."*
 
